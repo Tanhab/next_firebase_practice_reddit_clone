@@ -7,7 +7,7 @@ const Layout:React.FC<PropsWithChildren> = ({ children }) => {
     return (
         <>
         <Navbar />
-        <main>{children}</main>
+        <main style={{paddingTop:'50px'}}>{children}</main>
         </>
     )
 }
