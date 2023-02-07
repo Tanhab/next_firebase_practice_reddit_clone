@@ -1,5 +1,6 @@
 import { extendTheme } from "@chakra-ui/react"
 import { Button } from "./button"
+import { MenuList } from "./MenuList"
 
 
 export const theme = extendTheme({
