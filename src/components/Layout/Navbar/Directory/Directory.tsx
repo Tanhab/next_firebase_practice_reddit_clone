@@ -10,6 +10,7 @@ import {
 } from "@chakra-ui/react"
 import React from "react"
 import { TiHome } from "react-icons/ti"
+import Communities from "./Communities"
 
 const Directory: React.FC = () => {
   return (
@@ -39,11 +40,8 @@ const Directory: React.FC = () => {
         </Flex>
       </MenuButton>
       <MenuList>
-        <MenuItem>Communities</MenuItem>
-        <MenuItem>Create a Copy</MenuItem>
-        <MenuItem>Mark as Draft</MenuItem>
-        <MenuItem>Delete</MenuItem>
-        <MenuItem>Attend a Workshop</MenuItem>
+        <Communities />
+        
       </MenuList>
     </Menu>
   )
