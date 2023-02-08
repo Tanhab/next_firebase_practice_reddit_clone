@@ -1,7 +1,8 @@
 import { Flex, Icon, MenuItem,Text } from "@chakra-ui/react"
 import React, { useState } from "react"
-import CreateCommunityModal from "../../../Modal/CreateCommunity.tsx/CreateCommunityModal"
+
 import { GrAdd } from "react-icons/gr"
+import CreateCommunityModal from "../../Modal/CreateCommunity.tsx/CreateCommunityModal"
 
 type CommunitiesProps = {}
 

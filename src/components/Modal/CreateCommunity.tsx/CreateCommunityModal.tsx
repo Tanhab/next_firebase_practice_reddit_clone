@@ -18,7 +18,13 @@ import {
   Icon,
 } from "@chakra-ui/react"
 import { async } from "@firebase/util"
-import { doc, getDoc, serverTimestamp, setDoc } from "firebase/firestore"
+import {
+  doc,
+  getDoc,
+  runTransaction,
+  serverTimestamp,
+  setDoc,
+} from "firebase/firestore"
 import React, { useState } from "react"
 import { useAuthState } from "react-firebase-hooks/auth"
 import { BsFillPersonFill, BsFillEyeFill } from "react-icons/bs"
@@ -34,7 +40,7 @@ const CreateCommunityModal: React.FC<CreateCommunityProps> = ({
   open,
   handleClose,
 }) => {
-    const [user] = useAuthState(auth)
+  const [user] = useAuthState(auth)
   const [communityName, setCommunityName] = useState("")
   const [charsRemaining, setCharsRemaining] = useState(21)
   const [communityType, setCommunityType] = useState("public")
@@ -68,25 +74,38 @@ const CreateCommunityModal: React.FC<CreateCommunityProps> = ({
     setLoading(true)
 
     try {
-         const comunityDocRef = doc(firestore, "communities", communityName)
-         const comunityDoc = await getDoc(comunityDocRef)
+      const comunityDocRef = doc(firestore, "communities", communityName)
 
-         if (comunityDoc.exists()) {
-           setError(`Sorry, /r${communityName} is already taken. Try another`)
-         }
+      await runTransaction(firestore, async (transaction) => {
+        const comunityDoc = await transaction.get(comunityDocRef)
 
-         await setDoc(comunityDocRef, {
-           creatorId: user?.uid,
-           createdAt: serverTimestamp(),
-           numberOfMembers: 1,
-           privacyType: communityType,
-         })
+        if (comunityDoc.exists()) {
+          setError(`Sorry, /r${communityName} is already taken. Try another`)
+        }
+
+        transaction.set(comunityDocRef, {
+          creatorId: user?.uid,
+          createdAt: serverTimestamp(),
+          numberOfMembers: 1,
+          privacyType: communityType,
+        })
+
+        transaction.set(
+          doc(
+            firestore,
+            `users/${user?.uid}/communitySnippets`,
+            communityName),
+            {
+              communityId: communityName,
+              isModerator: true,
+            }
+          )
+      })
     } catch (error: any) {
-        console.error("handleCommunityError", error)
-        setError(error?.message)
+      console.error("handleCommunityError", error)
+      setError(error?.message)
     }
     // name not taken & valid name
-   
 
     setLoading(false)
   }

@@ -1,8 +1,8 @@
 import { Flex, Image } from "@chakra-ui/react"
 import React from "react"
 import { useAuthState } from "react-firebase-hooks/auth"
-import { auth } from "../../../firebase/client.App"
-import AuthModal from "../../Modal/Auth/AuthModal"
+import { auth } from "../../firebase/client.App"
+
 import Directory from "./Directory/Directory"
 import RightContent from "./RightContent/RightContent"
 import SearchInput from "./SearchInput"

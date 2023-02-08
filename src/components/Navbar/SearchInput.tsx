@@ -1,10 +1,9 @@
-import { SearchIcon, CheckIcon } from "@chakra-ui/icons"
+import { SearchIcon } from "@chakra-ui/icons"
 import {
   Flex,
   Input,
   InputGroup,
-  InputLeftElement,
-  InputRightElement,
+  InputLeftElement
 } from "@chakra-ui/react"
 import { User } from "firebase/auth"
 import React from "react"
