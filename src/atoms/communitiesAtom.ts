@@ -7,5 +7,23 @@ export interface Community {
   numberOfMember: number
   privacyType: "public" | "restricted" | "private"
   createdAt?: Timestamp
-  imageUrl?: string
+  imageURL?: string
 }
+
+export interface CommunitySnippet {
+  communityId: string
+  isModerator?: boolean
+  imageURL?: string
+}
+interface CommunityState {
+  mySnippets: CommunitySnippet[]
+}
+
+const defaultCommunityState: CommunityState = {
+  mySnippets: [],
+}
+
+export const communityState = atom<CommunityState>({
+  key: "communityState",
+  default: defaultCommunityState,
+})
