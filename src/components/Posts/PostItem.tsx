@@ -31,7 +31,7 @@ type PostItemProps = {
   post: Post
   userIsCreator: boolean
   userVoteValue?: number
-  onVote: () => void
+  onVote: (post: Post, vote: number, communityId: string) => void
   onDeletePost: (post: Post) => Promise<boolean>
 }
 
@@ -46,7 +46,7 @@ const PostItem: React.FC<PostItemProps> = ({
   const singlePostView = false
   const [loadingImage, setLoadingImage] = useState(true)
   const [error, setError] = useState(false)
-  const [loadingDelete,setLoadingDelete] = useState(false)
+  const [loadingDelete, setLoadingDelete] = useState(false)
 
   const handleDelete = async () => {
     setLoadingDelete(true)
@@ -86,7 +86,7 @@ const PostItem: React.FC<PostItemProps> = ({
           color={userVoteValue === 1 ? "brand.100" : "gray.400"}
           fontSize={22}
           cursor="pointer"
-          //onClick={(event) => onVote(event, post, 1, post.communityId)}
+          onClick={(event) => onVote(post, 1, post.communityId)}
         />
         <Text fontSize="9pt" fontWeight={600}>
           {post.voteStatus}
@@ -100,7 +100,7 @@ const PostItem: React.FC<PostItemProps> = ({
           color={userVoteValue === -1 ? "#4379FF" : "gray.400"}
           fontSize={22}
           cursor="pointer"
-          //onClick={(event) => onVote(event, post, -1, post.communityId)}
+          onClick={(event) => onVote(post, -1, post.communityId)}
         />
       </Flex>
       <Flex direction="column" width="100%">
