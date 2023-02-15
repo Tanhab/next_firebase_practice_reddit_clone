@@ -1,4 +1,12 @@
-import { collection, deleteDoc, doc, getDocs, query, where, writeBatch } from "firebase/firestore"
+import {
+  collection,
+  deleteDoc,
+  doc,
+  getDocs,
+  query,
+  where,
+  writeBatch,
+} from "firebase/firestore"
 import { deleteObject, ref } from "firebase/storage"
 import { useRouter } from "next/router"
 import React, { useEffect, useState } from "react"
@@ -18,12 +26,19 @@ const usePosts = () => {
   const router = useRouter()
   const communityStateValue = useRecoilValue(communityState)
 
-  const onVote = async (post : Post, vote: number, communityId: string) => {
+  const onVote = async (
+    event: React.MouseEvent<SVGElement, MouseEvent>,
+    post: Post,
+    vote: number,
+    communityId: string
+  ) => {
+
+    event.stopPropagation()
     if (!user?.uid) {
       setAuthModalState({ open: true, view: "login" })
       return
     }
-    
+
     const { voteStatus } = post
     const existingVote = postStateValue.postVotes.find(
       (_vote) => _vote.postId === post.id
@@ -160,7 +175,14 @@ const usePosts = () => {
       return false
     }
   }
-  const onSelectPost = () => {}
+  const onSelectPost = (post: Post) => {
+    setPostStateValue((prev) => ({
+      ...prev,
+      selectedPost: post,
+    }))
+
+    router.push(`/r/${post.communityId}/comments/${post.id}`)
+  }
   const getCommunityPostVotes = async (communityId: string) => {
     const postVotesQuery = query(
       collection(firestore, `users/${user?.uid}/postVotes`),
@@ -186,19 +208,19 @@ const usePosts = () => {
 
     // return () => unsubscribe();
   }
-  useEffect(()=>{
-    if(!user || !communityStateValue.currentCommunity?.id) return
+  useEffect(() => {
+    if (!user || !communityStateValue.currentCommunity?.id) return
     getCommunityPostVotes(communityStateValue.currentCommunity?.id)
-  },[user, communityStateValue.currentCommunity])
+  }, [user, communityStateValue.currentCommunity])
 
-  useEffect(()=>{
-    if(!user){
-      setPostStateValue((prev)=>({
+  useEffect(() => {
+    if (!user) {
+      setPostStateValue((prev) => ({
         ...prev,
-        postVotes:[]
+        postVotes: [],
       }))
     }
-  },[user])
+  }, [user])
   return {
     postStateValue,
     setPostStateValue,
